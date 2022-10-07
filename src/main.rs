@@ -77,7 +77,7 @@ fn main() {
     }
 
     // trait object (dynamic dispatch)
-    // trait is a compile time concept (has no size at runtime)
+    // trait is a compile time construct (has no size at runtime)
     {
         let person = Person {
             name: "John".to_string(),
@@ -86,7 +86,8 @@ fn main() {
             name: "Puppy".to_string(),
         };
 
-        let mut animal: &dyn Animal; // <-- trait object must use dyn keyword
+        let mut animal: &dyn Animal;
+        //               ^^^ --> trait object must use dyn keyword
 
         animal = &person;
         println!("{}", animal.name());
