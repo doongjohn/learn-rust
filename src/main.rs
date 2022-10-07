@@ -6,19 +6,44 @@
 
 // TODO: learn this
 // - Fn, FnMut, FnOnce
-// - Box
 // - dyn
 // - move
+
+// Heap memory
+// Box, Rc, Arc, are smart pointers
+// - Box: deallocation happens when it goes out of scope
+// - Rc: referance counted pointer
+// - Arc: atomic referance counted pointer
 
 fn main() {
     // module (namespace)
     {
+        // `use` is equivalent to c++ `usingnamespace`
         use greetings::greetings_inner::*;
         use greetings::*;
 
         hello();
         hello_world();
         // say_hello(); // <-- error: only visiable in greetings module
+    }
+
+    // Copy types: types that implement copy trait are copied on assignment
+    // https://dhghomon.github.io/easy_rust/Chapter_19.html
+    {
+        let a = 10;
+        let b = a;
+
+        println!("a = {}", a); // <-- a is still alive because it is never moved
+        println!("b = {}", b);
+    }
+
+    // other types get moved on assignment
+    {
+        let a = "hi".to_string();
+        let b = a;
+
+        // println!("a = {}", a); // <-- error: value of a is moved to b
+        println!("b = {}", b);
     }
 
     // debug print
@@ -41,13 +66,13 @@ fn main() {
         }
     }
 
-    // taking ownership
+    // taking ownership and take it back
     {
         let mut hello: String = "hello".to_string();
         println!("{}", hello);
 
         hello = append(hello, " and good bye"); // <-- this takes hello's ownership
-        //                                             but it returns it back
+                                                //                                             but it returns it back
 
         // append(hello, " and good bye"); // <-- this will invalidate the variable `hello`
         // //                                     because it takes its ownership
@@ -59,6 +84,13 @@ fn main() {
         let hello: String = "hello".to_string();
         println!("{}", hello);
         let hello = append(hello, " and good bye");
+        println!("{}", hello);
+    }
+    // borrowing
+    {
+        let mut hello: String = "hello".to_string();
+        println!("{}", hello);
+        append_borrow(&mut hello, " and good bye");
         println!("{}", hello);
     }
 
@@ -149,7 +181,13 @@ fn say_name(a: &impl Animal) {
 }
 
 // parameter without borrowing will take its ownership
+// more about mut parameter: https://www.snoyman.com/blog/2020/05/no-mutable-parameters-in-rust/
 fn append<'a>(mut target: String, source: &str) -> String {
     target.push_str(source);
     target
+}
+
+// this instead use borrowing
+fn append_borrow<'a>(target: &mut String, source: &str) {
+    (*target).push_str(source);
 }
