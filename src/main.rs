@@ -8,6 +8,8 @@
 // - Fn, FnMut, FnOnce
 // - dyn
 // - move
+// - ref vs &
+//   https://users.rust-lang.org/t/ref-keyword-versus/18818/5
 
 // Heap memory
 // Box, Rc, Arc, are smart pointers
@@ -127,9 +129,6 @@ fn main() {
         animal = &dog;
         println!("{}", animal.name());
     }
-
-    // ref vs &
-    // https://users.rust-lang.org/t/ref-keyword-versus/18818/5
 }
 
 mod greetings {
